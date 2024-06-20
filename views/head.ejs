@@ -17,6 +17,10 @@
       word-wrap: break-word;
     }
   </style>
+
+  <script type="text/javascript" src="/js/base64url.js"></script>
+  <script type="text/javascript" src="/js/signup.js"></script>
+  <script type="text/javascript" src="/js/login.js"></script>
   <!-- views/partials/head.ejs -->
 </head>
 
@@ -38,6 +42,7 @@
          <% } %>
 
         <% if (user) { %>
+          <a class="nav-item nav-link" href="/signup">Register PassKey</a>
           <a class="nav-item nav-link" href="/status">Status</a>
          <% } %>
 

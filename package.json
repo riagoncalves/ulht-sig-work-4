@@ -14,7 +14,9 @@
         "mongoose": "^8.3.1",
         "nodemon": "^3.1.0",
         "passport": "^0.7.0",
-        "passport-google-oauth2": "^0.2.0"
+        "passport-fido2-webauthn": "^0.1.0",
+        "passport-google-oauth2": "^0.2.0",
+        "uuid": "^10.0.0"
     },
     "scripts": {
         "start": "node index.js",

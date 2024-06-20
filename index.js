@@ -53,6 +53,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', require('./routes/authRoutes'));
 app.use('/lyrics', require('./routes/lyricsRoutes'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Create the server according to environment
 createServer(app);

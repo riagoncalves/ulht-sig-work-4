@@ -1,9 +1,14 @@
 // Get the configuration values
 require('dotenv').config();
 const User = require('../models/User');
+const PublicKeyCredential = require('../models/PublicKeyCredential');
 
 const passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth2').Strategy;
+const WebAuthnStrategy = require('passport-fido2-webauthn');
+const SessionChallengeStore = WebAuthnStrategy.SessionChallengeStore;
+const store = new SessionChallengeStore();
+const base64url = require('base64url');
 
 /*
  * After a successful authentication, store the user id in the session
@@ -71,3 +76,43 @@ function expiryDate(seconds) {
     // return Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeStyle: 'long' }).format(date);
     return date.toLocaleString('en-GB', { dateStyle: 'long', timeStyle: 'long' });
 }
+
+passport.use(new WebAuthnStrategy({ store: store }, async function verify(id, userHandle, cb) {
+  const publicKeyCred = await PublicKeyCredential.findOne({ externalId: id });
+
+  if (!publicKeyCred) {
+    return cb(null, false, { message: 'Invalid key.' });
+  }
+
+  const publicKey = publicKeyCred.publicKey;
+  const user = await User.findOne({ passKeyId: publicKeyCred.userId });
+
+  if (!user) {
+    return cb(null, false, { message: 'Invalid key. '});
+  }
+
+  if (Buffer.compare(user.passKeyId, userHandle) != 0) {
+    return cb(null, false, { message: 'Invalid key.' });
+  }
+
+  return cb(null, user, publicKey);
+}, async function register(user, id, publicKey, cb) {
+
+  const dbUser = await User.findOne({ email: user.name });
+
+  if (dbUser) {
+    dbUser.displayName = user.displayName;
+    dbUser.passKeyId = user.id;
+    await dbUser.save();
+
+    await new PublicKeyCredential({
+      userId: dbUser.passKeyId,
+      externalId: id,
+      publicKey: publicKey
+    }).save();
+
+    return cb(null, dbUser);
+  }
+
+  return cb(null, false, { message: 'Invalid user email.' });
+}));

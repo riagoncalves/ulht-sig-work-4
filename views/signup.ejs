@@ -1,0 +1,22 @@
+<%- include('head'); -%>
+<main>
+  <div class="jumbotron">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Sign Up</h2>
+    </div>
+
+    <form action="#" method="POST" class="js-signup_form">
+      <input type="hidden" name="_method" value="PUT">
+      <div class="form-group">
+        <label for="displayName">Name</label>
+        <input type="text" class="form-control" id="displayName" name="displayName" value="<%= user.displayName %>" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+  </div>
+</main>
+<%- include('foot'); -%>

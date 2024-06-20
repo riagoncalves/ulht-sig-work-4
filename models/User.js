@@ -17,6 +17,7 @@ dbConnect().catch(err => console.error(err));
 
 const userSchema = new mongoose.Schema({
     googleId: String,
+    passKeyId: Buffer,
     displayName: String,
     email: String,
     accessToken: String,
