@@ -1,0 +1,22 @@
+<%- include('../head'); -%>
+<main>
+  <div class="jumbotron">
+    <div class="d-flex justify-content-between align-items-center">
+      <h2>Editing <%= lyric.title %></h2>
+    </div>
+
+    <form action="/lyrics/<%= lyric._id %>/update" method="POST">
+      <input type="hidden" name="_method" value="PUT">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="title" value="<%= lyric.title %>" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" name="description" rows="5" required><%= lyric.description %></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+</main>
+<%- include('../foot'); -%>
